@@ -96,63 +96,6 @@ export function removeColor(
   return new ImageData(data, imageData.width, imageData.height)
 }
 
-function removeColorContiguous(
-  imageData: ImageData,
-  startX: number,
-  startY: number,
-  tolerance: number
-): ImageData | null {
-  const { data, width, height } = imageData
-  const idx = (startY * width + startX) * 4
-
-  if (data[idx + 3] === 0) return null
-
-  const targetR = data[idx]
-  const targetG = data[idx + 1]
-  const targetB = data[idx + 2]
-
-  const result = new Uint8ClampedArray(data)
-  const visited = new Uint8Array(width * height)
-
-  const queue: number[] = [startY * width + startX]
-  let head = 0
-  visited[startY * width + startX] = 1
-
-  while (head < queue.length) {
-    const pixelIdx = queue[head++]
-    const px = pixelIdx % width
-    const py = (pixelIdx - px) / width
-    const dataIdx = pixelIdx * 4
-
-    if (
-      Math.abs(result[dataIdx] - targetR) <= tolerance &&
-      Math.abs(result[dataIdx + 1] - targetG) <= tolerance &&
-      Math.abs(result[dataIdx + 2] - targetB) <= tolerance
-    ) {
-      result[dataIdx + 3] = 0
-
-      if (px > 0) {
-        const n = pixelIdx - 1
-        if (!visited[n]) { visited[n] = 1; queue.push(n) }
-      }
-      if (px < width - 1) {
-        const n = pixelIdx + 1
-        if (!visited[n]) { visited[n] = 1; queue.push(n) }
-      }
-      if (py > 0) {
-        const n = pixelIdx - width
-        if (!visited[n]) { visited[n] = 1; queue.push(n) }
-      }
-      if (py < height - 1) {
-        const n = pixelIdx + width
-        if (!visited[n]) { visited[n] = 1; queue.push(n) }
-      }
-    }
-  }
-
-  return new ImageData(result, width, height)
-}
-
 export function computeSelection(
   imageData: ImageData,
   startX: number,

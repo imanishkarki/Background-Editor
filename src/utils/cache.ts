@@ -49,17 +49,3 @@ export async function clearAllImageData(): Promise<void> {
     tx.onerror = () => reject(tx.error)
   })
 }
-
-const LS_PREFIX = 'bgremover-'
-
-function saveSetting(key: string, value: string | number): void {
-  try { localStorage.setItem(LS_PREFIX + key, String(value)) } catch {}
-}
-
-function loadSetting(key: string, defaultValue: string): string {
-  try { return localStorage.getItem(LS_PREFIX + key) ?? defaultValue } catch { return defaultValue }
-}
-
-function removeSetting(key: string): void {
-  try { localStorage.removeItem(LS_PREFIX + key) } catch {}
-}
