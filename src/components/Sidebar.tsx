@@ -214,7 +214,7 @@ export default function Sidebar({
             <ToolButton
               icon={<WandIcon />}
               label="Magic Wand"
-              variant="purple"
+              variant="violet"
               active={magicWandMode}
               onClick={onMagicWand}
             />
@@ -277,10 +277,10 @@ export default function Sidebar({
                   <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-gray-100 dark:bg-gray-800">
                     <div
                       className="w-5 h-5 rounded-full border border-gray-300 shrink-0"
-                      style={{ backgroundColor: `rgb(${selectedColor.r},${selectedColor.g},${selectedColor.b})` }}
+                      style={{ backgroundColor: `rgb(${selectedColor.rgb.r},${selectedColor.rgb.g},${selectedColor.rgb.b})` }}
                     />
                     <span className="text-xs text-muted font-mono">
-                      rgb({selectedColor.r},{selectedColor.g},{selectedColor.b})
+                      rgb({selectedColor.rgb.r},{selectedColor.rgb.g},{selectedColor.rgb.b})
                     </span>
                   </div>
                 )}

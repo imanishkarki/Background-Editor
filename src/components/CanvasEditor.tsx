@@ -470,8 +470,6 @@ export default function CanvasEditor({
       />
       <CropOverlay
         cropRect={cropRect}
-        canvasWidth={canvasWidth}
-        canvasHeight={canvasHeight}
         offsetLeft={canvasOffset.left}
         offsetTop={canvasOffset.top}
         isActive={cropActive}

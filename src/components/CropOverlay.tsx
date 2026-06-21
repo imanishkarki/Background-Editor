@@ -2,8 +2,6 @@ import type { CropRect } from '../types/image'
 
 interface CropOverlayProps {
   cropRect: CropRect | null
-  canvasWidth: number
-  canvasHeight: number
   offsetLeft: number
   offsetTop: number
   isActive: boolean
@@ -11,8 +9,6 @@ interface CropOverlayProps {
 
 export default function CropOverlay({
   cropRect,
-  _canvasWidth,
-  _canvasHeight,
   offsetLeft,
   offsetTop,
   isActive,
