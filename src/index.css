@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-page: #f7f5f4;
+  --bg-card: #ffffff;
+  --bg-surface: #f3f4f6;
+  --text-muted: #6b7280;
+  --text-accent: #1a1a2e;
+  --border-color: #e5e7eb;
+  --header-from: #312e81;
+  --header-to: #3730a3;
+}
+
+.dark {
+  --bg-page: #0f172a;
+  --bg-card: #1e293b;
+  --bg-surface: #334155;
+  --text-muted: #94a3b8;
+  --text-accent: #f1f5f9;
+  --border-color: #334155;
+  --header-from: #020617;
+  --header-to: #1e293b;
+}
+
+.theme-pixelated {
+  --bg-page: #0d1117;
+  --bg-card: #161b22;
+  --bg-surface: #21262d;
+  --text-muted: #8b949e;
+  --text-accent: #e6edf3;
+  --border-color: #30363d;
+  --header-from: #0d1117;
+  --header-to: #21262d;
+}
+
+.theme-gradient {
+  --bg-page: #0f0f23;
+  --bg-card: #1a1a3e;
+  --bg-surface: #282860;
+  --text-muted: #a0a0d0;
+  --text-accent: #f0f0ff;
+  --border-color: #3a3a70;
+  --header-from: #667eea;
+  --header-to: #764ba2;
+}
+
+.theme-texture {
+  --bg-page: #f5efe6;
+  --bg-card: #faf7f2;
+  --bg-surface: #ede6dc;
+  --text-muted: #8a7e72;
+  --text-accent: #3d3428;
+  --border-color: #ddd2c4;
+  --header-from: #5c4a3a;
+  --header-to: #8b7355;
+}
+
+.checkerboard {
+  background-image:
+    conic-gradient(#ccc 90deg, #fff 90deg, #fff 180deg, #ccc 180deg, #ccc 270deg, #fff 270deg, #fff 360deg);
+  background-size: 16px 16px;
+}
+
+.dark .checkerboard {
+  background-image:
+    conic-gradient(#555 90deg, #333 90deg, #333 180deg, #555 180deg, #555 270deg, #333 270deg, #333 360deg);
+}
+
+.theme-pixelated .checkerboard {
+  background-image:
+    conic-gradient(#252540 90deg, #1a1a30 90deg, #1a1a30 180deg, #252540 180deg, #252540 270deg, #1a1a30 270deg, #1a1a30 360deg);
+}
+
+.theme-gradient .checkerboard {
+  background-image:
+    conic-gradient(#3a3a7a 90deg, #2a2a6a 90deg, #2a2a6a 180deg, #3a3a7a 180deg, #3a3a7a 270deg, #2a2a6a 270deg, #2a2a6a 360deg);
+}
+
+.theme-texture .checkerboard {
+  background-image:
+    conic-gradient(#d4c9bc 90deg, #e8dfd4 90deg, #e8dfd4 180deg, #d4c9bc 180deg, #d4c9bc 270deg, #e8dfd4 270deg, #e8dfd4 360deg);
+}
+
+.bg-dotgrid {
+  background-image: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.045) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 28px 28px;
+}
+
+.dark .bg-dotgrid {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.035) 1.5px,
+    transparent 1.5px
+  );
+}
+
+.theme-pixelated .bg-dotgrid {
+  background-image: radial-gradient(
+    circle,
+    rgba(0, 212, 255, 0.08) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+}
+
+.theme-gradient .bg-dotgrid {
+  background-image: radial-gradient(
+    circle,
+    rgba(102, 126, 234, 0.06) 1.5px,
+    transparent 1.5px
+  );
+}
+
+.theme-texture .bg-dotgrid {
+  background-image: radial-gradient(
+    circle,
+    rgba(139, 115, 85, 0.06) 1.5px,
+    transparent 1.5px
+  );
+}
+
+.bg-texture {
+  background-image:
+    repeating-conic-gradient(
+      rgba(60, 50, 40, 0.025) 0% 25%,
+      transparent 0% 50%
+    ),
+    radial-gradient(
+      circle,
+      rgba(139, 115, 85, 0.06) 1.5px,
+      transparent 1.5px
+    );
+  background-size: 2px 2px, 28px 28px;
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: repeating-conic-gradient(
+    rgba(60, 50, 40, 0.025) 0% 25%,
+    transparent 0% 50%
+  );
+  background-size: 2px 2px;
+}
+
+@media (max-width: 767px) {
+  .btn-min-touch {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+.geometric-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
