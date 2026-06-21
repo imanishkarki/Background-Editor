@@ -91,7 +91,7 @@ export default function CanvasEditor({
   const [polygonMousePos, setPolygonMousePos] = useState<{ x: number; y: number } | null>(null)
   const [isDragOver, setIsDragOver] = useState(false)
   const freehandDrawingRef = useRef(false)
-  const touchHandledTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const touchHandledTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const canvasWidth = displayCanvasRef.current?.width ?? 0
   const canvasHeight = displayCanvasRef.current?.height ?? 0
 
@@ -272,73 +272,90 @@ export default function CanvasEditor({
 
   const touchCropRef = useRef(false)
   const touchHandledRef = useRef(false)
-  const longPressTimerRef = useRef<ReturnType<typeof setTimeout>>()
-  const longPressPosRef = useRef<{ x: number; y: number }>()
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const longPressPosRef = useRef<{ x: number; y: number } | null>(null)
 
   const clearLongPress = useCallback(() => {
     if (longPressTimerRef.current) {
       clearTimeout(longPressTimerRef.current)
-      longPressTimerRef.current = undefined
+      longPressTimerRef.current = null
     }
   }, [])
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent<HTMLCanvasElement>) => {
       if (!hasImage) return
-      const touch = e.touches[0]
+      clearLongPress()
       touchHandledRef.current = true
       touchHandledTimerRef.current = setTimeout(() => { touchHandledRef.current = false }, 300)
 
+      const touch = e.touches[0]
+
       if (cropActive) {
         e.preventDefault()
-        const { x, y } = getCanvasCoords(touch.clientX, touch.clientY)
-        onCropStart(x, y)
         touchCropRef.current = true
-      } else if (brushMode) {
-        e.preventDefault()
-        setCursorPos(getCursorPos(touch.clientX, touch.clientY))
         const { x, y } = getCanvasCoords(touch.clientX, touch.clientY)
-        onBrushStart(x, y)
-      } else if (freeSelectActive && !freeSelectClosed) {
+        const canvas = displayCanvasRef.current
+        if (canvas) {
+          onCropStart(
+            Math.max(0, Math.min(x, canvas.width)),
+            Math.max(0, Math.min(y, canvas.height))
+          )
+        }
+        return
+      }
+
+      if (freeSelectActive && !freeSelectClosed) {
         e.preventDefault()
         freehandDrawingRef.current = true
         const { x, y } = getCanvasCoords(touch.clientX, touch.clientY)
         onFreeSelectStart(x, y)
-      } else {
-        e.preventDefault()
-        longPressPosRef.current = { x: touch.clientX, y: touch.clientY }
-        longPressTimerRef.current = setTimeout(() => {
-          longPressTimerRef.current = undefined
-          if (longPressPosRef.current) {
-            onContextMenu(longPressPosRef.current.x, longPressPosRef.current.y)
-            longPressPosRef.current = undefined
-          }
-        }, 500)
-        const { x, y } = getCanvasCoords(touch.clientX, touch.clientY)
-        if (polygonActive && !polygonClosed) {
-          if (polygonPoints.length >= 3) {
-            const first = polygonPoints[0]
-            const dist = Math.sqrt((x - first[0]) ** 2 + (y - first[1]) ** 2)
-            if (dist <= 8) {
-              onPolygonClose()
-              return
-            }
-          }
-          onPolygonPoint(x, y)
-          return
-        }
-        if (polygonClosed && polygonPoints.length >= 3) {
-          const inside = pointInPolygon(x, y, polygonPoints)
-          if (!inside) return
-        }
-        if (freeSelectClosed && freeSelectPoints.length >= 3) {
-          const inside = pointInPolygon(x, y, freeSelectPoints)
-          if (!inside) return
-        }
-        onCanvasClick(touch.clientX, touch.clientY)
+        return
       }
+
+      if (brushMode) {
+        e.preventDefault()
+        setCursorPos(getCursorPos(touch.clientX, touch.clientY))
+        const { x, y } = getCanvasCoords(touch.clientX, touch.clientY)
+        onBrushStart(x, y)
+        return
+      }
+
+      longPressPosRef.current = { x: touch.clientX, y: touch.clientY }
+      longPressTimerRef.current = setTimeout(() => {
+        longPressTimerRef.current = null
+        if (longPressPosRef.current) {
+          onContextMenu(longPressPosRef.current.x, longPressPosRef.current.y)
+          longPressPosRef.current = null
+        }
+      }, 500)
+
+      const { x, y } = getCanvasCoords(touch.clientX, touch.clientY)
+
+      if (polygonActive && !polygonClosed) {
+        e.preventDefault()
+        if (polygonPoints.length >= 3) {
+          const first = polygonPoints[0]
+          const dist = Math.sqrt((x - first[0]) ** 2 + (y - first[1]) ** 2)
+          if (dist <= 8) {
+            onPolygonClose()
+            return
+          }
+        }
+        onPolygonPoint(x, y)
+        return
+      }
+      if (polygonClosed && polygonPoints.length >= 3) {
+        const inside = pointInPolygon(x, y, polygonPoints)
+        if (!inside) return
+      }
+      if (freeSelectClosed && freeSelectPoints.length >= 3) {
+        const inside = pointInPolygon(x, y, freeSelectPoints)
+        if (!inside) return
+      }
+      onCanvasClick(touch.clientX, touch.clientY)
     },
-    [hasImage, brushMode, freeSelectActive, freeSelectClosed, cropActive, polygonActive, polygonClosed, polygonPoints, freeSelectClosed, freeSelectPoints, getCursorPos, getCanvasCoords, onBrushStart, onFreeSelectStart, onCropStart, onPolygonPoint, onPolygonClose, onCanvasClick]
+    [hasImage, brushMode, freeSelectActive, freeSelectClosed, cropActive, polygonActive, polygonClosed, polygonPoints, freeSelectPoints, getCursorPos, getCanvasCoords, onBrushStart, onFreeSelectStart, onCropStart, onPolygonPoint, onPolygonClose, onCanvasClick, onContextMenu, clearLongPress]
   )
 
   const handleTouchMove = useCallback(

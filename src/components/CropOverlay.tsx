@@ -11,8 +11,8 @@ interface CropOverlayProps {
 
 export default function CropOverlay({
   cropRect,
-  canvasWidth,
-  canvasHeight,
+  _canvasWidth,
+  _canvasHeight,
   offsetLeft,
   offsetTop,
   isActive,
